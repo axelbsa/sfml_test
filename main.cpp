@@ -8,99 +8,18 @@
 
 #include "main.hpp"
 
-#define WIDTH  800
-#define HEIGTH 600
-#define RED sf::Color::Red
 
 sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Test");
 sf::Texture      texture;
 sf::Sprite       sprite;
-sf::Uint8        *pixels  = new sf::Uint8[800 * 600 * 4];
 
 sf::Time thetime;
 sf::Clock sf_clock;
 sf::Text text;
 sf::Font font;
 
-void clearcolor()
-{
-    for(int x = 0; x < WIDTH; x++)
-    {
-        for(int y = 0; y < HEIGTH; y++)
-        {
-            pixels[4 * ((y * WIDTH) + x) + 0]    = 25; // R?
-            pixels[4 * ((y * WIDTH) + x) + 1]    = 25; // G?
-            pixels[4 * ((y * WIDTH) + x) + 2]    = 25; // B?
-            pixels[4 * ((y * WIDTH) + x) + 3]    = 255; // A?
-        }
-    }
-}
 
-void putpixel(int x, int y, sf::Color)
-{
-    pixels[4 * ((y * WIDTH) + x) + 0]    = 255; // R?
-    pixels[4 * ((y * WIDTH) + x) + 1]    = 0;   // G?
-    pixels[4 * ((y * WIDTH) + x) + 2]    = 0;   // B?
-    pixels[4 * ((y * WIDTH) + x) + 3]    = 255; // A?
-}
 
-void line(int xa, int ya, int xb, int yb)
-{
-    int dx, dy; // Destination coordinates
-    int x, y;   // Coordinates for drawing, starting at xa,ya and goes to xb,yb
-    int p;
-    int i;
-    int signx, signy;
-
-    dx = xb - xa;
-    dy = yb - ya;
-    x = xa;
-    y = ya;
-
-    signx = dx >= 0 ? 1 : -1;
-    signy = dy >= 0 ? 1 : -1;
-
-    if (abs(dy) < abs(dx))
-    {
-        p = (2 * dy * signy) - (dx * signx);
-        for (i = 0; i <= dx * signx; i++) 
-        {
-                putpixel(floor(x),floor(y),RED);
-                if (p < 0)
-                {
-                    x = x + signx;
-                    y = y;
-                    p = p + (2 * dy * signy);
-                }
-                else
-                {
-                    x = x + signx;
-                    y = y + signy;
-                    p = p + (2 * dy * signy) - (2 * dx * signx);
-                }
-            }
-    }
-    else
-    {
-        p = (2 * dx * signx - dy * signy);
-        for( i = 0; i <= dy * signy; i++)
-        {
-            putpixel(floor(x),floor(y),RED);
-            if (p < 0)
-            {
-                x = x;
-                y = y + signy;
-                p = p + 2 * dx * signx;
-            }
-            else
-            {
-                x=x+signx;
-                y=y+signy;
-                p=p+(2*dx*signx) - (2*dy* signy);
-            }
-        }
-    }
-}
 
 
 int main()

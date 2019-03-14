@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-g -Wall -std=c++11 -Wno-missing-braces -I /home/axelbs/src/SFML-2.5.1/include/ -L/home/axelbs/src/SFML-2.5.1/lib/
+CFLAGS=-mavx -g -Wall -std=c++11 -Wno-missing-braces -I /home/axelbs/src/SFML-2.5.1/include/ -L/home/axelbs/src/SFML-2.5.1/lib/
 #LFLAGS=-lraylib -lopengl32 -lraylib -lglfw3 -lgdi32
 
 # linux
@@ -7,7 +7,7 @@ CFLAGS=-g -Wall -std=c++11 -Wno-missing-braces -I /home/axelbs/src/SFML-2.5.1/in
 LFLAGS=-lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system -lGL -lX11 -lm -ldl -lpthread
 
 ifeq ($(OS),Windows_NT)
-	CFLAGS=-g -Wall -std=gnu++11 -Wno-missing-braces
+	CFLAGS= -mavx -g -Wall -std=gnu++11 -Wno-missing-braces
 	LFLAGS=-lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system -lopengl32 -lm -lpthread
 endif
 
