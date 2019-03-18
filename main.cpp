@@ -6,8 +6,10 @@
 #include <SFML/Main.hpp>
 #include <SFML/System.hpp>
 
-#include "main.hpp"
+#include "graphics.hpp"
 
+#define MIDDLE_X WIDTH/2
+#define MIDDLE_Y HEIGTH/2
 
 sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Test");
 sf::Texture      texture;
@@ -18,19 +20,55 @@ sf::Clock sf_clock;
 sf::Text text;
 sf::Font font;
 
+Vector2 foo;
+Vector3 points[8];
 
+Matrix_3x3 projection = {0};
 
-
+Matrix_3x3 rotationX = {0};
+Matrix_3x3 rotationY = {0};
+Matrix_3x3 rotationZ = {0};
 
 int main()
 {
     char c[100];
+    float angle = -0.2;
+
+    // Projection Matrix Rows
+    projection.m0 = 1; projection.m3 = 0; projection.m6 = 0;
+    projection.m1 = 0; projection.m4 = 1; projection.m7 = 0;
+    projection.m2 = 0; projection.m5 = 1; projection.m8 = 0;
+
+    rotationX.m0 = 1;  rotationX.m3 = 0;           rotationX.m6 = 0;
+    rotationX.m1 = 0;  rotationZ.m4 =  cos(angle); rotationZ.m7 = -sin(angle);
+    rotationZ.m2 = 0;  rotationZ.m5 =  sin(angle); rotationZ.m8 = cos(angle);
+
+    rotationZ.m0 = cos(angle);  rotationZ.m2 = -sin(angle); rotationZ.m3 = 0;
+    rotationZ.m1 = sin(angle);  rotationZ.m3 =  cos(angle); rotationZ.m5 = 0;
+    rotationZ.m2 = 0;           rotationZ.m5 =  0;          rotationZ.m8 = 1;
 
     texture.create(WIDTH, HEIGTH);
     font.loadFromFile("FSEX300.ttf");
 
-    int xarrow = 0;
-    int yarrow = 0;
+    Vector2 line1_p1 = {WIDTH/2, HEIGTH/2};
+    Vector2 line1_p2 = {300, 100};
+
+    Vector2 line2_p1 = {WIDTH/2, HEIGTH/2};
+    Vector2 line2_p2 = {600, (HEIGTH/2) + 120};
+
+    Vector2 circleCenter = {400, 300};
+
+    points[0] = {MIDDLE_X - 50, MIDDLE_Y - 50, -50};
+    points[1] = {MIDDLE_X + 50, MIDDLE_Y - 50, -50};
+    points[2] = {MIDDLE_X + 50, MIDDLE_Y + 50, -50};
+    points[3] = {MIDDLE_X - 50, MIDDLE_Y + 50, -50};
+
+    points[4] = {MIDDLE_X - 50, MIDDLE_Y - 50, 50};
+    points[5] = {MIDDLE_X + 50, MIDDLE_Y - 50, 50};
+    points[6] = {MIDDLE_X + 50, MIDDLE_Y + 50, 50};
+    points[7] = {MIDDLE_X - 50, MIDDLE_Y + 50, 50};
+
+    int radius = 250;
 
     while (window.isOpen())
     {
@@ -54,33 +92,50 @@ int main()
                 window.close();
             }
         }
+        //rotation.m0 = cos(angle);  rotation.m2 = -sin(angle); rotation.m3 = 0;
+        //rotation.m1 = sin(angle);  rotation.m3 =  cos(angle); rotation.m5 = 0;
 
         // clear the window with black color
         //window.clear(sf::Color::Black);
         clearcolor();
-        if (xarrow % 799 == 0)
-            xarrow = 0;
 
-        if (yarrow % 599 == 0)
-            yarrow = 0;
+        //line(line1_p1, line1_p2);
+        //line(line2_p1, line2_p2);
+        //circle(circleCenter, radius);
 
-        line(400, 300, 799, yarrow++);
-        line(400, 300, xarrow++, 599);
+        //sprintf(c, "Hei, Nora");
+        //text.setFont(font);
+        //text.setString(std::string(c));
+        //text.setFillColor(sf::Color(2,125,240));
+        //text.setPosition(10, 10);
 
-        sprintf(c, "Hello");
-        text.setFont(font);
-        text.setString(std::string(c));
-        text.setFillColor(sf::Color(2,125,240));
-        text.setPosition(700, 550);
+        //window.draw(text);
 
-        texture.update(pixels);
-        sprite.setTexture(texture);
-        window.draw(sprite);
-        window.draw(text);
+        //define a circle with radius = 200
+        //sf::CircleShape circleShape(200);
+        //circleShape.setRadius(240);
+        //circleShape.setPointCount(100);
+        //circleShape.setPosition(160, 60);
+        //circleShape.setFillColor(sf::Color(150, 50, 250, 0));
+        //circleShape.setOutlineColor(sf::Color(250, 150, 100));
+        //circleShape.setOutlineThickness(1);
+        //window.draw(circleShape);
+
+        for (int k = 0; k < 4; k++) {
+            //printf("Points: ");
+            Vector3 rotated = MatrixMultiply(rotationX, points[k]);
+            Vector3 projecte2d = MatrixMultiply(projection, rotated);
+            circle(projecte2d, 6);
+        }
 
         // end the current frame
-        window.display();
-    }
+        texture.update(pixels);     // Send stuff to GPU
+        sprite.setTexture(texture); // Create sprite from texture
+        window.draw(sprite);        // Draw sprite
 
+        window.display();           // Blit (copy from backbuffer?)
+
+        angle += 0.001;
+    }
     return 0;
 }

@@ -12,12 +12,13 @@ ifeq ($(OS),Windows_NT)
 endif
 
 SOURCES=main.cpp
+BINARY=grfx
 
 all:
-	$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) -o main
+	$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) -o $(BINARY)
 
 debug:
-	$(CC) -DDEBUG $(SOURCES) $(CFLAGS) $(LFLAGS) -o main
+	$(CC) -DDEBUG $(SOURCES) $(CFLAGS) $(LFLAGS) -o $(BINARY)
 
 clean:
-	del main
+	del $(BINARY)
