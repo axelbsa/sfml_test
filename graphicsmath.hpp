@@ -824,7 +824,7 @@ RMDEF Vector3 MatrixMultiply(Matrix_3x3 left, Vector3 right)
     result.y = left.m1*right.x + left.m4*right.y + left.m7*right.z;
     result.z = left.m2*right.x + left.m5*right.y + left.m8*right.z;
 
-    printf("Matrixmul: result.x:%f result.y:%f\n", result.x, result.y);
+    //printf("Matrixmul: result.x:%f result.y:%f\n", result.x, result.y);
     return result;
 }
 
