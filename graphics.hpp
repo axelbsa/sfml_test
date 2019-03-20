@@ -175,4 +175,63 @@ void line(Vector2 p1, Vector2 p2)
     }
 }
 
+void line(Vector3 p1, Vector3 p2)
+{
+    int p;
+    int i;
+    int signx, signy;
+
+    Vector3 dest;       // Destination vector?
+    Vector3 curr_point; // Coordinates for drawing, starting at xa,ya and goes to xb,yb
+
+    dest = Vector3Subtract(p2, p1);
+    
+    curr_point.x = p1.x;
+    curr_point.y = p1.y;
+
+    signx = dest.x >= 0 ? 1 : -1; // Used to dertimene negative values on a spehere
+    signy = dest.y >= 0 ? 1 : -1;
+
+    if (abs(dest.y) < abs(dest.x))
+    {
+        p = (2 * dest.y * signy) - (dest.x * signx);
+        for (i = 0; i <= dest.x * signx; i++) 
+        {
+                putpixel(floor(curr_point.x),floor(curr_point.y),RED);
+                if (p < 0)
+                {
+                    curr_point.x = curr_point.x + signx;
+                    curr_point.y = curr_point.y;
+                    p = p + (2 * dest.y * signy);
+                }
+                else
+                {
+                    curr_point.x = curr_point.x + signx;
+                    curr_point.y = curr_point.y + signy;
+                    p = p + (2 * dest.y * signy) - (2 * dest.x * signx);
+                }
+            }
+    }
+    else
+    {
+        p = (2 * dest.x * signx - dest.y * signy);
+        for( i = 0; i <= dest.y * signy; i++)
+        {
+            putpixel(floor(curr_point.x),floor(curr_point.y),RED);
+            if (p < 0)
+            {
+                curr_point.x = curr_point.x;
+                curr_point.y = curr_point.y + signy;
+                p = p + 2 * dest.x * signx;
+            }
+            else
+            {
+                curr_point.x = curr_point.x + signx;
+                curr_point.y = curr_point.y + signy;
+                p = p + (2 * dest.x * signx) - (2 * dest.y * signy);
+            }
+        }
+    }
+}
+
 #endif
