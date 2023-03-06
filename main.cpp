@@ -13,7 +13,7 @@
 
 void connect(int i, int j, Vector3* points);
 
-sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Test");
+sf::RenderWindow window(sf::VideoMode(1920, 1080, 32), "Test");
 sf::Texture      texture;
 sf::Sprite       sprite;
 
@@ -23,11 +23,11 @@ sf::Text text;
 sf::Font font;
 
 Vector2 foo;
-Vector3 points[8];
+Vector3 points[20];
 Vector3 screenView;
 
 float z = 1;
-const float distance = 1.2f;
+const float distance = 3.3f;
 Matrix_3x3 projection = {0};
 
 Matrix_3x3 rotationX = {0};
@@ -71,15 +71,28 @@ int main()
 
     Vector2 circleCenter = {400, 300};
 
-    points[0] = { -0.5, -0.5, -0.5};
-    points[1] = {  0.5, -0.5, -0.5};
-    points[2] = {  0.5,  0.5, -0.5};
-    points[3] = { -0.5,  0.5, -0.5};
+    points[0] = { -1.0, -1.0, -1.0};
+    points[1] = {  1.0, -1.0, -1.0};
+    points[2] = {  1.0,  1.0, -1.0};
+    points[3] = { -1.0,  1.0, -1.0};
 
-    points[4] = { -0.5, -0.5, 0.5};
-    points[5] = {  0.5, -0.5, 0.5};
-    points[6] = {  0.5,  0.5, 0.5};
-    points[7] = { -0.5,  0.5, 0.5};
+    points[4] = { -1.0, -1.0, 1.0};
+    points[5] = {  1.0, -1.0, 1.0};
+    points[6] = {  1.0,  1.0, 1.0};
+    points[7] = { -1.0,  1.0, 1.0};
+
+    points[8] ={0, 1.618033988749895, 0.6180339887498948};
+    points[9] ={0, 1.618033988749895, -0.6180339887498948};
+    points[10] ={0, -1.618033988749895, 0.6180339887498948};
+    points[11] ={0, -1.618033988749895, -0.6180339887498948};
+    points[12] ={0.6180339887498948, 0, 1.618033988749895};
+    points[13] ={0.6180339887498948, 0, -1.618033988749895};
+    points[14] ={-0.6180339887498948, 0, 1.618033988749895};
+    points[15] ={-0.6180339887498948, 0, -1.618033988749895};
+    points[16] ={1.618033988749895, 0.6180339887498948, 0};
+    points[17] ={1.618033988749895, -0.6180339887498948, 0};
+    points[18] ={-1.618033988749895, 0.6180339887498948, 0};
+    points[19] ={-1.618033988749895, -0.6180339887498948, 0};
 
     int radius = 250;
 
@@ -134,8 +147,8 @@ int main()
 
         //window.draw(text);
 
-        Vector3 projected[8] = { 0 };
-        for (int k = 0; k < 8; k++) {
+        Vector3 projected[20] = { 0 };
+        for (int k = 0; k < 20; k++) {
             //printf("Points: ");
             Vector3 rotated = MatrixMultiply(rotationX, points[k]);
             rotated = MatrixMultiply(rotationY, rotated);
@@ -154,9 +167,9 @@ int main()
             //printf("Projected coords[%d]: X:%f Y:%f\n", k, projecte2d.x, projecte2d.y);
         }
 
-        for (int i = 0; i < 8; i++) 
+        for (int i = 0; i < 20; i++) 
         {
-            circle(projected[i], 6);
+            circle(projected[i], 3);
         }
 
         for (int i = 0; i < 4; i++) 
@@ -165,6 +178,19 @@ int main()
             connect(i + 4, ((i+1) % 4) + 4, projected);
             connect(i + 0, i + 4,           projected);
         }
+
+        connect(8, 9,             projected);
+        connect(8, 6,             projected);
+        connect(9, 5,             projected);
+
+
+        connect(10, 11,           projected);
+
+        connect(12, 14,           projected);
+        connect(13, 15,           projected);
+
+        connect(16, 17,           projected);
+        connect(18, 19,           projected);
 
         // end the current frame
         texture.update(pixels);     // Send stuff to GPU
