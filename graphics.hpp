@@ -1,7 +1,7 @@
 #ifndef  _GRAPHICS_HPP
 #define  _GRAPHICS_HPP 1
 
-#include <immintrin.h>
+//#include <immintrin.h>
 #include "graphicsmath.hpp"
 
 #define WIDTH  800
@@ -11,8 +11,8 @@
 
 sf::Uint8        *pixels  = new sf::Uint8[800 * 600 * 4];
 
-__m256 evens = _mm256_set_ps(2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0);
-__m256 odds  = _mm256_set_ps(1.0, 3.0, 5.0, 7.0, 9.0, 11.0, 13.0, 15.0);
+//__m256 evens = _mm256_set_ps(2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0);
+//__m256 odds  = _mm256_set_ps(1.0, 3.0, 5.0, 7.0, 9.0, 11.0, 13.0, 15.0);
 
 extern void line(Vector2 p1, Vector2 p2);
 extern void putpixel(int x, int y, sf::Color);
