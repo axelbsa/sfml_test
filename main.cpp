@@ -1,5 +1,5 @@
-#include<stdio.h>
-#include<math.h>
+#include <stdio.h>
+#include <math.h>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -13,7 +13,7 @@
 
 void connect(int i, int j, Vector3* points);
 
-sf::RenderWindow window(sf::VideoMode(1920, 1080, 32), "Test");
+sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Test");
 sf::Texture      texture;
 sf::Sprite       sprite;
 
@@ -139,24 +139,18 @@ int main()
         //line(line2_p1, line2_p2);
         circle(circleCenter, radius);
 
-        //sprintf(c, "Hei, Nora");
-        //text.setFont(font);
-        //text.setString(std::string(c));
-        //text.setFillColor(sf::Color(2,125,240));
-        //text.setPosition(10, 10);
-
-        //window.draw(text);
+        sprintf(c, "Hei verden: %f", angle);
 
         Vector3 projected[20] = { 0 };
         for (int k = 0; k < 20; k++) {
             //printf("Points: ");
             Vector3 rotated = MatrixMultiply(rotationX, points[k]);
             rotated = MatrixMultiply(rotationY, rotated);
-            
+
             // Update projection matrix with Z values
             z = 1 / (distance - rotated.z);
             projection.m0 = z;
-            projection.m4 = z; 
+            projection.m4 = z;
             projection.m8 = z;
 
             Vector3 projecte2d = MatrixMultiply(projection, rotated);
@@ -167,12 +161,12 @@ int main()
             //printf("Projected coords[%d]: X:%f Y:%f\n", k, projecte2d.x, projecte2d.y);
         }
 
-        for (int i = 0; i < 20; i++) 
+        for (int i = 0; i < 20; i++)
         {
             circle(projected[i], 3);
         }
 
-        for (int i = 0; i < 4; i++) 
+        for (int i = 0; i < 4; i++)
         {
             connect(i + 0, ((i+1) % 4) + 0, projected);
             connect(i + 4, ((i+1) % 4) + 4, projected);
@@ -196,10 +190,21 @@ int main()
         texture.update(pixels);     // Send stuff to GPU
         sprite.setTexture(texture); // Create sprite from texture
         window.draw(sprite);        // Draw sprite
-        window.display();           // Blit (copy from backbuffer?)
-        angle += 0.005;
-    }
 
+        text.setFont(font);
+        text.setString(std::string(c));
+        text.setFillColor(sf::Color(2,125,240));
+        text.setPosition(10, 10);
+        window.draw(text);
+
+        window.display();           // Blit (copy from backbuffer?)
+        if (angle > 50)
+        {
+            angle=-1.0f;
+        }
+        angle += 0.005;
+
+    }
     return 0;
 }
 
@@ -209,5 +214,4 @@ void connect(int i, int j, Vector3 *points)
     Vector3 a = points[i];
     Vector3 b = points[j];
     line(a, b);
-
 }
