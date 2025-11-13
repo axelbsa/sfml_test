@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<math.h>
+#include <sys/time.h>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -34,11 +35,36 @@ Matrix_3x3 rotationX = {0};
 Matrix_3x3 rotationY = {0};
 Matrix_3x3 rotationZ = {0};
 
+void debugPrintVector(Vector3 point)
+{
+    fprintf(stderr, ".X=%f \t .Y=%f \t .Z=%f\n", point.x, point.y, point.z);
+}
+
+
+double get_time()
+{
+#ifndef WIN32
+    struct timeval tv;
+    gettimeofday(&tv, 0);
+    return tv.tv_sec + tv.tv_usec * 1.0e-6;
+#else
+    return GetTickCount() / 1000.0;
+#endif
+}
 
 int main()
 {
     char c[100];
-    float angle = -0.2;
+    //float angle = -0.2;
+    float angle = 0.0f;
+
+    int fps = 0;
+    int fps_counter = 0;
+
+    double current_time;
+    double target_time;
+    double previous_time = 0.0;
+    double last_game_time = 0.0;
 
     screenView.x = MIDDLE_X;
     screenView.y = MIDDLE_Y;
@@ -83,6 +109,13 @@ int main()
 
     int radius = 250;
 
+    double start_time = get_time();
+
+    for (int i = 0; i < 8; i++ )
+    {
+        debugPrintVector(points[i]);
+    }
+
     while (window.isOpen())
     {
         // check all the window's events that were triggered since the last iteration of the loop
@@ -106,13 +139,24 @@ int main()
             }
         }
 
-        rotationX.m0 = 1;  rotationX.m3 = 0;           rotationX.m6 = 0;
-        rotationX.m1 = 0;  rotationX.m4 =  cos(angle); rotationX.m7 = -sin(angle);
-        rotationX.m2 = 0;  rotationX.m5 =  sin(angle); rotationX.m8 = cos(angle);
+        current_time = get_time();
+        target_time = current_time - start_time;
 
-        rotationY.m0 = cos(angle);  rotationY.m3 = 0; rotationY.m6 = sin(angle);
-        rotationY.m1 = 0;           rotationY.m4 = 1; rotationY.m7 = 0;
-        rotationY.m2 = -sin(angle); rotationY.m5 = 0; rotationY.m8 = cos(angle);
+        //rotationX.m0 = 1;  rotationX.m3 = 0;           rotationX.m6 = 0;
+        //rotationX.m1 = 0;  rotationX.m4 =  cos(angle); rotationX.m7 = -sin(angle);
+        //rotationX.m2 = 0;  rotationX.m5 =  sin(angle); rotationX.m8 = cos(angle);
+
+        rotationX.m0 = 1;  rotationX.m3 = 0;           rotationX.m6 = 0;
+        rotationX.m1 = 0;  rotationX.m4 = 1;           rotationX.m7 = 0;
+        rotationX.m2 = 0;  rotationX.m5 = 0;           rotationX.m8 = 1;
+
+        //rotationY.m0 = cos(angle);  rotationY.m3 = 0; rotationY.m6 = sin(angle);
+        //rotationY.m1 = 0;           rotationY.m4 = 1; rotationY.m7 = 0;
+        //rotationY.m2 = -sin(angle); rotationY.m5 = 0; rotationY.m8 = cos(angle);
+
+        rotationY.m0 = 1; rotationY.m3 = 0; rotationY.m6 = 0;
+        rotationY.m1 = 0; rotationY.m4 = 1; rotationY.m7 = 0;
+        rotationY.m2 = 0; rotationY.m5 = 0; rotationY.m8 = 1;
 
         rotationZ.m0 = cos(angle);  rotationZ.m2 = -sin(angle); rotationZ.m3 = 0;
         rotationZ.m1 = sin(angle);  rotationZ.m3 =  cos(angle); rotationZ.m5 = 0;
@@ -147,12 +191,15 @@ int main()
             projection.m8 = z;
 
             Vector3 projecte2d = MatrixMultiply(projection, rotated);
-            projecte2d = Vector3Scale(projecte2d, sin(angle) * 300) ;
+            printf("Projected coords[%d]: X:%f Y:%f\n", k, projecte2d.x, projecte2d.y);
+            //projecte2d = Vector3Scale(projecte2d, sin(2.14) * 300) ;
+            printf("\tScale coords[%d]: X:%f Y:%f\n", k, projecte2d.x, projecte2d.y);
             projecte2d = Vector3Add(projecte2d, screenView);
+            printf("\tScreen view coords[%d]: X:%f Y:%f\n", k, projecte2d.x, projecte2d.y);
             projected[k] = projecte2d;
 
-            //printf("Projected coords[%d]: X:%f Y:%f\n", k, projecte2d.x, projecte2d.y);
         }
+        printf("\n");
 
         for (int i = 0; i < 8; i++) 
         {
@@ -172,6 +219,18 @@ int main()
         window.draw(sprite);        // Draw sprite
         window.display();           // Blit (copy from backbuffer?)
         angle += 0.005;
+
+        last_game_time = target_time;
+        if ( (target_time - previous_time) >= 1.0)
+        {
+            fps = fps_counter;
+            fps_counter = 0;
+            previous_time = target_time;
+            fprintf(stderr, "fps:\t%d\n", fps);
+        }
+
+        fps_counter += 1;
+
     }
 
     return 0;
@@ -183,5 +242,4 @@ void connect(int i, int j, Vector3 *points)
     Vector3 a = points[i];
     Vector3 b = points[j];
     line(a, b);
-
 }
