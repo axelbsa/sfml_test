@@ -1,7 +1,7 @@
 CC=clang++
 
 # Linux
-CFLAGS=-mavx -g -Wall -std=c++11 -Wno-missing-braces -I /home/axelbs/src/SFML-2.5.1/include/ -L/home/axelbs/src/SFML-2.5.1/lib/
+CFLAGS=-mavx -g -Wall -std=c++17 -Wno-missing-braces
 LFLAGS=-lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system -lGL -lX11 -lm -ldl -lpthread
 
 $(echo \"TEST\")

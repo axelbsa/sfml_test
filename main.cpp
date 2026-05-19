@@ -3,7 +3,6 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/Main.hpp>
 #include <SFML/System.hpp>
 
 #include "graphics.hpp"
@@ -13,13 +12,11 @@
 
 void connect(int i, int j, Vector3* points);
 
-sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Test");
+sf::RenderWindow window(sf::VideoMode({800, 600}), "Test");
 sf::Texture      texture;
-sf::Sprite       sprite;
 
 sf::Time thetime;
 sf::Clock sf_clock;
-sf::Text text;
 sf::Font font;
 
 Vector2 foo;
@@ -60,8 +57,10 @@ int main()
     rotationZ.m1 = sin(angle);  rotationZ.m3 =  cos(angle); rotationZ.m5 = 0;
     rotationZ.m2 = 0;           rotationZ.m5 =  0;          rotationZ.m8 = 1;
 
-    texture.create(WIDTH, HEIGTH);
-    font.loadFromFile("FSEX300.ttf");
+    texture.resize({WIDTH, HEIGTH});
+    font.openFromFile("FSEX300.ttf");
+    sf::Sprite sprite(texture);
+    sf::Text text(font);
 
     //Vector2 line1_p1 = {WIDTH/2, HEIGTH/2};
     //Vector2 line1_p2 = {300, 100};
@@ -98,22 +97,19 @@ int main()
 
     while (window.isOpen())
     {
-        // check all the window's events that were triggered since the last iteration of the loop
-        sf::Event event;
-        while (window.pollEvent(event))
+        while (const auto event = window.pollEvent())
         {
-            // "close requested" event: we close the window
-            if (event.type == sf::Event::Closed)
+            if (event->is<sf::Event::Closed>())
                 window.close();
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
             {
                 // move left...
             }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
             {
                 // move right...
             }
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
             {
                 window.close();
             }
@@ -191,10 +187,9 @@ int main()
         sprite.setTexture(texture); // Create sprite from texture
         window.draw(sprite);        // Draw sprite
 
-        text.setFont(font);
         text.setString(std::string(c));
         text.setFillColor(sf::Color(2,125,240));
-        text.setPosition(10, 10);
+        text.setPosition({10.f, 10.f});
         window.draw(text);
 
         window.display();           // Blit (copy from backbuffer?)
