@@ -44,6 +44,7 @@ int main()
     screenView.y = MIDDLE_Y;
 
     // Projection Matrix Rows
+    /* These are not needed yet
     projection.m0 = 1; projection.m3 = 0; projection.m6 = 0;
     projection.m1 = 0; projection.m4 = 1; projection.m7 = 0;
     projection.m2 = 0; projection.m5 = 0; projection.m8 = 0;
@@ -59,6 +60,7 @@ int main()
     rotationZ.m0 = cos(angle);  rotationZ.m2 = -sin(angle); rotationZ.m3 = 0;
     rotationZ.m1 = sin(angle);  rotationZ.m3 =  cos(angle); rotationZ.m5 = 0;
     rotationZ.m2 = 0;           rotationZ.m5 =  0;          rotationZ.m8 = 1;
+    */
 
     texture.create(WIDTH, HEIGTH);
     font.loadFromFile("FSEX300.ttf");
@@ -124,7 +126,7 @@ int main()
 
         //line(line1_p1, line1_p2);
         //line(line2_p1, line2_p2);
-        circle(circleCenter, radius);
+        //circle(circleCenter, radius);
 
         //sprintf(c, "Hei, Nora");
         //text.setFont(font);
@@ -147,17 +149,18 @@ int main()
             projection.m8 = z;
 
             Vector3 projecte2d = MatrixMultiply(projection, rotated);
-            projecte2d = Vector3Scale(projecte2d, sin(angle) * 300) ;
+            // projecte2d = Vector3Scale(projecte2d, sin(angle) * 300) ;
+            projecte2d = Vector3Scale(projecte2d, 200) ;
             projecte2d = Vector3Add(projecte2d, screenView);
             projected[k] = projecte2d;
 
             //printf("Projected coords[%d]: X:%f Y:%f\n", k, projecte2d.x, projecte2d.y);
         }
 
-        for (int i = 0; i < 8; i++) 
-        {
-            circle(projected[i], 6);
-        }
+        //for (int i = 0; i < 8; i++) 
+        //{
+        //    circle(projected[i], 6);
+        //}
 
         for (int i = 0; i < 4; i++) 
         {

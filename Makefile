@@ -1,5 +1,6 @@
 CC=g++
-CFLAGS=-mavx -g -Wall -std=c++11 -Wno-missing-braces -I /home/axelbs/src/SFML-2.5.1/include/ -L/home/axelbs/src/SFML-2.5.1/lib/
+# CFLAGS=-mavx -g -Wall -std=c++11 -Wno-missing-braces -I /home/axelbs/src/SFML-2.5.1/include/ -L/home/axelbs/src/SFML-2.5.1/lib/
+CFLAGS=-mavx -g -Wall -std=c++11 -Wno-missing-braces -std=c++23
 #LFLAGS=-lraylib -lopengl32 -lraylib -lglfw3 -lgdi32
 
 # linux
